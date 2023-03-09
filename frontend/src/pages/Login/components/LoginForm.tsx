@@ -1,19 +1,14 @@
 import { Formik, Form, Field } from "formik";
-import { FormFieldsLogin } from "../pages/Login";
+import { FormFieldsLogin } from "../Login";
 import { FirebaseAuthButtons } from "./FirebaseAuthButtons";
 import { Separator } from "./Separator";
 
 interface Props {
     initialValues: FormFieldsLogin;
-    loginForm: boolean;
     setLoginForm: (value: boolean) => void;
 }
 
-export const LoginForm = ({
-    initialValues,
-    loginForm,
-    setLoginForm,
-}: Props) => {
+export const LoginForm = ({ initialValues, setLoginForm }: Props) => {
     return (
         <>
             <h3 className="font-bold text-3xl">Login</h3>
@@ -65,7 +60,7 @@ export const LoginForm = ({
                 Don't have an account yet?{" "}
                 <span
                     className="cursor-pointer text-cyan-800 font-bold"
-                    onClick={() => setLoginForm(!loginForm)}
+                    onClick={() => setLoginForm(false)}
                 >
                     Register
                 </span>
