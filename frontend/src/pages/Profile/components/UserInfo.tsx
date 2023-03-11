@@ -29,7 +29,7 @@ export const UserInfo = ({ setEdit }: Props) => {
                     </div>
                     <div className="flex flex-col items-end justify-center !border-t-0">
                         <button
-                            className="font-medium border-2 rounded-xl px-8 py-2 text-sm md:text-base"
+                            className="font-medium rounded-xl px-8 py-2 text-sm md:text-base bg-gray-600"
                             onClick={() => setEdit(true)}
                         >
                             Edit

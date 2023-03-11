@@ -6,3 +6,7 @@
     font-family: "Noto Sans", sans-serif;
     background-color: #252329;
 }
+
+body {
+    margin: 0;
+}

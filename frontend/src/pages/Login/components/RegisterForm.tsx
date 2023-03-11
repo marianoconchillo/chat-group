@@ -49,7 +49,7 @@ export const RegisterForm = ({ initialValues, setLoginForm }: Props) => {
                         </div>
                         <button
                             type="submit"
-                            className="text-stone-800 bg-white py-2 rounded font-medium hover:bg-gray-600 hover:ease-in hover:text-white duration-150 ease-out"
+                            className="text-stone-800 bg-white py-2 rounded font-medium hover:bg-gray-600 hover:ease-in hover:text-lightText duration-150 ease-out"
                         >
                             Continue with Email
                         </button>

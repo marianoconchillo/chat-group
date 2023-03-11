@@ -73,8 +73,7 @@ export const EditUserInfo = ({ setEdit }: Props) => {
                             type="password"
                         />
                     </div>
-                    {/* <button className="rounded-lg py-2 px-10 bg-blueButton text-white font-bold self-center md:self-start"> */}
-                    <button className="py-2 px-10 rounded font-medium bg-gray-600 text-white md:self-start">
+                    <button className="py-2 px-10 rounded font-medium bg-gray-600 md:self-start">
                         Save
                     </button>
                 </form>

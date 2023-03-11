@@ -16,7 +16,7 @@ export const Login = () => {
     };
 
     return (
-        <div className="text-white space-y-7 lg:border lg:px-10 lg:py-5 rounded-lg border-gray-600">
+        <div className="container mx-auto px-5 my-10 space-y-7 md:w-3/5 md:border md:px-10 md:py-5  lg:w-2/5 rounded-lg border-gray-600">
             {loginForm ? (
                 <LoginForm
                     initialValues={initialValues}
