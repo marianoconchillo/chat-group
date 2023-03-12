@@ -8,11 +8,11 @@ interface Props {
 
 export const Navbar = ({ click, setClick }: Props) => {
     return (
-        <div className="h-16 px-5 shadow flex items-center justify-between">
-            <div className="flex items-center space-x-5">
+        <div className="h-16 px-5 shadow flex items-center justify-between md:pl-10">
+            <div className="flex items-center space-x-5 md:space-x-0">
                 <FontAwesomeIcon
                     icon={faBars}
-                    className="cursor-pointer"
+                    className="cursor-pointer md:hidden"
                     onClick={() => setClick(!click)}
                 />
                 <p className="font-medium tracking-wide">WELCOME</p>
@@ -20,7 +20,7 @@ export const Navbar = ({ click, setClick }: Props) => {
             {click && (
                 <FontAwesomeIcon
                     icon={faXmark}
-                    className="cursor-pointer bg-backgroundDark py-1.5 px-2 rounded-lg"
+                    className="cursor-pointer bg-backgroundDark py-1.5 px-2 rounded-lg md:hidden"
                     onClick={() => setClick(!click)}
                 />
             )}

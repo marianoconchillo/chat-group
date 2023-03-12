@@ -3,7 +3,7 @@ import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 export const SendMessage = () => {
     return (
-        <div className="my-3 px-5">
+        <div className="mb-3 mt-5 px-5 md:pl-10">
             <div className="flex bg-backgroundLight items-center rounded-lg">
                 <textarea
                     placeholder="Type a message here"
