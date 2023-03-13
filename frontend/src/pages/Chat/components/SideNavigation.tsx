@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,6 +11,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export const SideNavigation = () => {
+    const navigate = useNavigate();
+
     const [click, setClick] = useState<boolean>(false);
 
     return (
@@ -51,7 +54,10 @@ export const SideNavigation = () => {
                         style={{ backgroundColor: "#252329" }}
                     >
                         <ul className="text-sm">
-                            <li className="px-4 py-2 rounded cursor-pointer flex items-center justify-start space-x-5 hover:bg-backgroundLight">
+                            <li
+                                className="px-4 py-2 rounded cursor-pointer flex items-center justify-start space-x-5 hover:bg-backgroundLight"
+                                onClick={() => navigate("/profile")}
+                            >
                                 <FontAwesomeIcon
                                     icon={faCircleUser}
                                     size="lg"

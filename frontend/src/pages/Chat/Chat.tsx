@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navbar } from "../../components/Navbar";
+import { Navbar } from "./components/Navbar";
 import { useDimensions } from "../../hooks/useDimensions";
 import { ChatMessages } from "./components/ChatMessages";
 import { SendMessage } from "./components/SendMessage";
@@ -23,22 +23,14 @@ export const Chat = () => {
     }, [width]);
 
     return (
-        <div className={`${wideScreen && `grid grid-cols-4`}`}>
+        <div className="md:grid grid-cols-4">
             {(click || wideScreen) && (
-                <div
-                    className={`absolute top-0 left-0 w-4/5 ${
-                        wideScreen && `col-span-1 relative w-full`
-                    }`}
-                >
+                <div className="absolute top-0 left-0 w-4/5 md:col-span-1 md:relative md:w-full">
                     <SideNavigation />
                 </div>
             )}
 
-            <div
-                className={`h-screen flex flex-col justify-between ${
-                    wideScreen && `col-span-3`
-                }`}
-            >
+            <div className="h-screen flex flex-col justify-between md:col-span-3">
                 <div>
                     <Navbar click={click} setClick={setClick} />
                 </div>

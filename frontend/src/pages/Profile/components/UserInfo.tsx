@@ -1,13 +1,25 @@
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faUser } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
     setEdit: (value: boolean) => void;
 }
 
 export const UserInfo = ({ setEdit }: Props) => {
+    const navigate = useNavigate();
+
     return (
         <>
+            <button
+                className="mb-10 flex items-center space-x-3 cursor-pointer"
+                onClick={() => navigate(-1)}
+            >
+                <FontAwesomeIcon icon={faAngleLeft} color="#2D9CDB" />
+                <p className="" style={{ color: "#2D9CDB" }}>
+                    Back
+                </p>
+            </button>
             <div className="mb-10 space-y-2">
                 <h2 className="font-medium text-2xl text-center">
                     Personal info
