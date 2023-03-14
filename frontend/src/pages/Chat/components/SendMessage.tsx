@@ -12,8 +12,7 @@ export const SendMessage = () => {
                 />
                 <FontAwesomeIcon
                     icon={faPaperPlane}
-                    className="p-2 mr-3 bg-red-500 rounded-lg cursor-pointer"
-                    style={{ backgroundColor: "#2F80ED" }}
+                    className="p-2 mr-3 rounded-lg cursor-pointer bg-backgroundBlue"
                 />
             </div>
         </div>
