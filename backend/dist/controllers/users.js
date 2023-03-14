@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = exports.loginUserFirebase = exports.loginUser = exports.registerUser = void 0;
+exports.updateUser = exports.getMe = exports.loginUserFirebase = exports.loginUser = exports.registerUser = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -73,11 +73,6 @@ exports.loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter
     if (user && (yield bcrypt_1.default.compare(password, user.password))) {
         res.json({
             _id: user._id,
-            email: user.email,
-            name: user.name,
-            bio: user.bio,
-            phone: user.phone,
-            pictureUrl: user.pictureUrl,
             token: generateToken(user._id),
         });
     }
@@ -96,11 +91,6 @@ exports.loginUserFirebase = (0, express_async_handler_1.default)((req, res) => _
     if (user) {
         res.json({
             _id: user._id,
-            email: user.email,
-            name: user.name,
-            bio: user.bio,
-            phone: user.phone,
-            pictureUrl: user.pictureUrl,
             token: generateToken(user._id),
         });
     }
@@ -117,11 +107,6 @@ exports.loginUserFirebase = (0, express_async_handler_1.default)((req, res) => _
         if (newUser) {
             res.json({
                 _id: newUser._id,
-                email: newUser.email,
-                name: newUser.name,
-                bio: newUser.bio,
-                phone: newUser.phone,
-                pictureUrl: newUser.pictureUrl,
                 token: generateToken(newUser._id),
             });
         }
@@ -131,6 +116,20 @@ exports.loginUserFirebase = (0, express_async_handler_1.default)((req, res) => _
             });
         }
     }
+}));
+// @desc    Get user data
+// @route   GET /api/users/me
+// @access  Private
+exports.getMe = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password, name, bio, phone, pictureUrl } = req.body;
+    res.status(200).json({
+        email: email || "",
+        password: password || "",
+        name: name || "",
+        bio: bio || "",
+        phone: phone || "",
+        pictureUrl: pictureUrl || "",
+    });
 }));
 // @desc    Update user data
 // @route   PATCH /api/users/:id

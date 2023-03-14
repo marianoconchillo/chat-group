@@ -1,9 +1,13 @@
-export interface User {
+export interface UserAuth {
     _id: string;
-    email: string;
     token: string;
-    name?: string;
-    bio?: string;
-    phone?: string;
-    pictureUrl?: string;
+}
+
+export interface User {
+    email: string;
+    password: string;
+    name: string;
+    bio: string;
+    phone: string;
+    pictureUrl: string;
 }

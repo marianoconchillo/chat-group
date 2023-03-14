@@ -1,6 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
-import { register } from "../../../redux/features/auth/authServices";
+import { login, register } from "../../../redux/features/auth/authServices";
 import { validateForm } from "../../../utils/validateForm";
 
 interface Props {
@@ -21,7 +21,9 @@ export const FormikForm = ({ showLoginForm }: Props) => {
     };
 
     const handleSubmit = async (email: string, password: string) => {
-        if (!showLoginForm) {
+        if (showLoginForm) {
+            await dispatch(login({ email, password }));
+        } else {
             await dispatch(register({ email, password }));
         }
     };

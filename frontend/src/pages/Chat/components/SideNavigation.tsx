@@ -9,9 +9,12 @@ import {
     faUsers,
     faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
+import { useAppDispatch } from "../../../hooks/useAppDispatch";
+import { logout } from "../../../redux/features/auth/authSlice";
 
 export const SideNavigation = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const [click, setClick] = useState<boolean>(false);
 
@@ -72,7 +75,7 @@ export const SideNavigation = () => {
                         <div className="text-sm text-red-500 hover:bg-backgroundLight">
                             <button
                                 className="px-4 py-2 w-full rounded cursor-pointer flex items-center justify-start space-x-5"
-                                // onClick={handleLogout}
+                                onClick={() => dispatch(logout())}
                             >
                                 <FontAwesomeIcon
                                     icon={faArrowRightFromBracket}

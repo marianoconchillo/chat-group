@@ -10,6 +10,7 @@ const router = (0, express_1.Router)();
 router.route("/").post(users_1.registerUser);
 router.route("/login").post(users_1.loginUser);
 router.route("/loginFirebase").post(users_1.loginUserFirebase);
+router.route("/me").get(authMiddleware_1.default, users_1.getMe);
 router.route("/:id").patch(authMiddleware_1.default, users_1.updateUser);
 exports.default = router;
 //# sourceMappingURL=user.js.map

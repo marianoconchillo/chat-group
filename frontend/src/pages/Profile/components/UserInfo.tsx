@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faUser } from "@fortawesome/free-solid-svg-icons";
+import { useAppSelector } from "../../../hooks/useAppSelector";
 
 interface Props {
     setEdit: (value: boolean) => void;
@@ -8,6 +9,8 @@ interface Props {
 
 export const UserInfo = ({ setEdit }: Props) => {
     const navigate = useNavigate();
+
+    const user = useAppSelector((state) => state.user.user);
 
     return (
         <>
@@ -53,11 +56,18 @@ export const UserInfo = ({ setEdit }: Props) => {
                 <div className="flex justify-between items-center h-20 text-sm md:text-base">
                     <h4 className="font-medium opacity-60">PHOTO</h4>
                     <div className="flex flex-col items-end md:items-start justify-center">
-                        <FontAwesomeIcon
-                            icon={faUser}
-                            size="lg"
-                            className="border-2 rounded-lg px-8 py-2"
-                        />
+                        {user?.pictureUrl ? (
+                            <img
+                                className="h-16 w-16 rounded mt-1.5"
+                                src={user.pictureUrl}
+                            />
+                        ) : (
+                            <FontAwesomeIcon
+                                icon={faUser}
+                                size="lg"
+                                className="text-input border-2 rounded-lg px-8 py-2"
+                            />
+                        )}
                     </div>
                 </div>
 
@@ -66,7 +76,7 @@ export const UserInfo = ({ setEdit }: Props) => {
                     <h4 className="font-medium opacity-60">NAME</h4>
                     <div className="flex flex-col items-end md:items-start justify-center">
                         <h4 className="font-medium opacity-90 text-end">
-                            Mariano Conchillo
+                            {user?.name}
                         </h4>
                     </div>
                 </div>
@@ -75,9 +85,7 @@ export const UserInfo = ({ setEdit }: Props) => {
                 <div className="flex justify-between items-center h-20 text-sm md:text-base">
                     <h4 className="font-medium opacity-60">BIO</h4>
                     <div className="flex flex-col items-end md:items-start justify-center">
-                        <h4 className="font-medium opacity-90">
-                            Softare Developer
-                        </h4>
+                        <h4 className="font-medium opacity-90">{user?.bio}</h4>
                     </div>
                 </div>
 
@@ -85,7 +93,9 @@ export const UserInfo = ({ setEdit }: Props) => {
                 <div className="flex justify-between items-center h-20 text-sm md:text-base">
                     <h4 className="font-medium opacity-60">PHONE</h4>
                     <div className="flex flex-col items-end md:items-start justify-center">
-                        <h4 className="font-medium opacity-90">123456789</h4>
+                        <h4 className="font-medium opacity-90">
+                            {user?.phone}
+                        </h4>
                     </div>
                 </div>
 
@@ -94,7 +104,7 @@ export const UserInfo = ({ setEdit }: Props) => {
                     <h4 className="font-medium opacity-60">EMAIL</h4>
                     <div className="flex flex-col items-end md:items-start justify-center">
                         <h4 className="font-medium opacity-90">
-                            marianoconchillo@hotmail.com
+                            {user?.email}
                         </h4>
                     </div>
                 </div>

@@ -6,13 +6,13 @@ import { RegisterForm } from "./components/RegisterForm";
 
 export const Login = () => {
     const navigate = useNavigate();
-    const { user } = useAppSelector((state) => state.auth);
+    const { userAuth } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
-        if (user) {
+        if (userAuth) {
             navigate("/");
         }
-    }, [user, navigate]);
+    }, [userAuth, navigate]);
 
     const [showLoginForm, setShowLoginForm] = useState<boolean>(true);
 
