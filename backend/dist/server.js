@@ -19,10 +19,12 @@ const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("./db/config"));
 const user_1 = __importDefault(require("./routes/user"));
+const channel_1 = __importDefault(require("./routes/channel"));
 class Server {
     constructor() {
         this.apiPaths = {
             users: "/api/users",
+            channels: "/api/channels",
         };
         this.dbConnection = () => __awaiter(this, void 0, void 0, function* () {
             yield (0, config_1.default)();
@@ -35,6 +37,7 @@ class Server {
     }
     routes() {
         this.app.use(this.apiPaths.users, user_1.default);
+        this.app.use(this.apiPaths.channels, channel_1.default);
     }
     middlewares() {
         this.app.use((0, cors_1.default)());

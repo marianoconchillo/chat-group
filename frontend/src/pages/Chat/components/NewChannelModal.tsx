@@ -1,5 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAppDispatch } from "../../../hooks/useAppDispatch";
+import { newChannel } from "../../../redux/features/channel/channelServices";
 import { validateNewChannel } from "../../../utils/validateForm";
 
 interface Props {
@@ -18,9 +20,17 @@ export type FormFieldsNewChannel = {
 };
 
 export const NewChannelModal = ({ showModal, setShowModal }: Props) => {
+    const dispatch = useAppDispatch();
+
     const initialValues: FormFieldsNewChannel = {
         name: "",
         description: "",
+    };
+
+    const handleSubmit = (values: FormFieldsNewChannel) => {
+        const { name, description } = values;
+        dispatch(newChannel({ name, description }));
+        setShowModal(false);
     };
 
     return (
@@ -32,12 +42,20 @@ export const NewChannelModal = ({ showModal, setShowModal }: Props) => {
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
+                    onClick={() => setShowModal(false)}
                 >
-                    <motion.div className="absolute w-5/6 p-10 bg-backgroundDark rounded-lg left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 md:w-3/5 lg:w-2/5">
+                    <motion.div
+                        className="absolute w-5/6 p-10 bg-backgroundDark rounded-lg left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 md:w-3/5 lg:w-2/5"
+                        onClick={(
+                            e: React.MouseEvent<HTMLDivElement, MouseEvent>
+                        ) => e.stopPropagation()}
+                    >
                         <h4 className="font-medium mb-5">NEW CHANNEL</h4>
                         <Formik
                             initialValues={initialValues}
-                            onSubmit={() => console.log("HOLA")}
+                            onSubmit={(values: FormFieldsNewChannel) => {
+                                handleSubmit(values);
+                            }}
                             validate={(values: FormFieldsNewChannel) => {
                                 return validateNewChannel(values);
                             }}
@@ -63,8 +81,16 @@ export const NewChannelModal = ({ showModal, setShowModal }: Props) => {
                                         id="description"
                                         as="textarea"
                                         placeholder="Channel description"
-                                        className="w-full bg-backgroundLight p-2.5  focus:outline-none rounded-lg text-sm resize-none"
+                                        className="w-full bg-backgroundLight p-2.5 focus:outline-none rounded-lg text-sm resize-none"
                                         field={{ rows: 4 }}
+                                    />
+                                    <ErrorMessage
+                                        name="description"
+                                        component={() => (
+                                            <p className="text-sm italic text-red-500">
+                                                {errors.description}
+                                            </p>
+                                        )}
                                     />
                                     <div className="flex space-x-3 justify-center md:justify-end">
                                         <button

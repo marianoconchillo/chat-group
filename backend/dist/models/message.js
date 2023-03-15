@@ -8,6 +8,6 @@ exports.messageSchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
-const Message = (0, mongoose_1.model)("Channel", exports.messageSchema);
+const Message = (0, mongoose_1.model)("Message", exports.messageSchema);
 exports.default = Message;
 //# sourceMappingURL=message.js.map

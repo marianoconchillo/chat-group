@@ -5,12 +5,14 @@ import fs from "fs";
 import cors from "cors";
 import connectDB from "./db/config";
 import userRoutes from "./routes/user";
+import channelRoutes from "./routes/channel";
 
 class Server {
     private app: Application;
     private port: string;
     private apiPaths = {
         users: "/api/users",
+        channels: "/api/channels",
     };
 
     constructor() {
@@ -24,6 +26,7 @@ class Server {
 
     private routes() {
         this.app.use(this.apiPaths.users, userRoutes);
+        this.app.use(this.apiPaths.channels, channelRoutes);
     }
 
     private middlewares() {

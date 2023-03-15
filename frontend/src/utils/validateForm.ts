@@ -8,6 +8,7 @@ interface ErrorLogin {
 
 interface ErrorNewChannel {
     name: string | null;
+    description: string | null;
 }
 
 export const validateForm = (values: FormFieldsLogin): ErrorLogin | void => {
@@ -41,19 +42,25 @@ export const validateForm = (values: FormFieldsLogin): ErrorLogin | void => {
     }
 };
 
-export const validateNewChannel = (values: FormFieldsNewChannel) => {
+export const validateNewChannel = (
+    values: FormFieldsNewChannel
+): ErrorNewChannel | void => {
     let errors: ErrorNewChannel = {
         name: null,
+        description: null,
     };
 
-    const { name } = values;
+    const { name, description } = values;
 
-    // Email Validation
     if (!name) {
         errors.name = "Channel name is required";
     }
 
-    if (errors.name) {
+    if (!description) {
+        errors.description = "Channel description is required";
+    }
+
+    if (errors.name || errors.description) {
         return errors;
     }
 };

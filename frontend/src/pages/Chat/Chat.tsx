@@ -42,14 +42,14 @@ export const Chat = () => {
                     <h3 className="text-2xl font-bold text-red-600">{error}</h3>
                 </div>
             ) : (
-                <div className="md:grid grid-cols-4">
+                <div className="md:grid grid-cols-7">
                     {(click || wideScreen) && (
-                        <div className="absolute top-0 left-0 w-4/5 md:col-span-1 md:relative md:w-full">
+                        <div className="absolute top-0 left-0 w-4/5 md:col-span-3 md:relative md:w-full lg:col-span-2">
                             <SideNavigation />
                         </div>
                     )}
 
-                    <div className="h-screen flex flex-col justify-between md:col-span-3">
+                    <div className="h-screen flex flex-col justify-between md:col-span-4 lg:col-span-5">
                         <div>
                             <Navbar click={click} setClick={setClick} />
                         </div>
