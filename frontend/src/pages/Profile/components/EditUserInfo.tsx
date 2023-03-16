@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faCamera } from "@fortawesome/free-solid-svg-icons";
+import { Id, toast } from "react-toastify";
 import { useAppSelector } from "../../../hooks/useAppSelector";
 import { Field, Form, Formik } from "formik";
 import { useAppDispatch } from "../../../hooks/useAppDispatch";
 import { updateProfile } from "../../../redux/features/user/userServices";
+import { reset } from "../../../redux/features/user/userSlice";
 import { Loading } from "../../../components/Loading";
 
 interface Props {
@@ -18,9 +20,13 @@ type FormFields = {
     password: string;
 };
 
+const toastId: string = "toast-id-profile";
+
 export const EditUserInfo = ({ setEdit }: Props) => {
     const dispatch = useAppDispatch();
-    const { user, isLoading, error } = useAppSelector((state) => state.user);
+    const { user, successUpdate, isLoading } = useAppSelector(
+        (state) => state.user
+    );
 
     const initialValues: FormFields = {
         name: user?.name || "",
@@ -33,6 +39,20 @@ export const EditUserInfo = ({ setEdit }: Props) => {
 
     const [submitButtonDisabled, setSubmitButtonDisabled] =
         useState<boolean>(true);
+
+    useEffect(() => {
+        if (successUpdate) {
+            toast.success("Profile Updated", {
+                toastId,
+                type: "success",
+                theme: "dark",
+                autoClose: 2000,
+                closeOnClick: false,
+                pauseOnHover: false,
+            });
+            dispatch(reset());
+        }
+    }, [successUpdate, isLoading, dispatch]);
 
     const handleEditClick = (values: FormFields) => {
         const { name, bio, phone, password } = values;
@@ -171,25 +191,20 @@ export const EditUserInfo = ({ setEdit }: Props) => {
                                     type="password"
                                 />
                             </div>
-                            <button
-                                className="py-2 px-10 rounded font-medium bg-gray-600 md:self-start"
-                                type="submit"
-                                disabled={submitButtonDisabled}
-                            >
-                                Save
-                            </button>
+                            {!isLoading ? (
+                                <button
+                                    className="py-2 px-10 rounded font-medium bg-gray-600 md:self-start"
+                                    type="submit"
+                                    disabled={submitButtonDisabled}
+                                >
+                                    Save
+                                </button>
+                            ) : (
+                                <Loading />
+                            )}
                         </Form>
                     )}
                 </Formik>
-                {isLoading ? (
-                    <Loading />
-                ) : (
-                    error && (
-                        <p className="text-sm font-bold text-red-600">
-                            {error}
-                        </p>
-                    )
-                )}
             </div>
         </>
     );

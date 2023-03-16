@@ -7,6 +7,7 @@ import { UploadApiResponse } from "cloudinary";
 import fs from "fs-extra";
 import User, { IUser } from "../models/user";
 import { uploadImage } from "../utils/cloudinary";
+import { AuthenticatedRequest } from "../middleware/authMiddleware";
 
 // @desc    Register new user
 // @route   POST /api/users
@@ -124,18 +125,25 @@ export const loginUserFirebase = asyncHandler(
 // @desc    Get user data
 // @route   GET /api/users/me
 // @access  Private
-export const getMe = asyncHandler(async (req: Request, res: Response) => {
-    const { email, password, name, bio, phone, pictureUrl } = req.body;
-
-    res.status(200).json({
-        email: email || "",
-        password: password || "",
-        name: name || "",
-        bio: bio || "",
-        phone: phone || "",
-        pictureUrl: pictureUrl || "",
-    });
-});
+export const getMe = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response) => {
+        if (req.user) {
+            const { email, password, name, bio, phone, pictureUrl } = req.user;
+            res.status(200).json({
+                email: email || "",
+                password: password || "",
+                name: name || "",
+                bio: bio || "",
+                phone: phone || "",
+                pictureUrl: pictureUrl || "",
+            });
+        } else {
+            res.status(400).json({
+                msg: "Invalid user data",
+            });
+        }
+    }
+);
 
 // @desc    Update user data
 // @route   PATCH /api/users/:id

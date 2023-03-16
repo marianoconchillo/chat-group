@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newChannel = void 0;
+exports.getAllChannels = exports.newChannel = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const channel_1 = __importDefault(require("../models/channel"));
 exports.newChannel = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -47,5 +47,9 @@ exports.newChannel = (0, express_async_handler_1.default)((req, res) => __awaite
             msg: "Invalid channel data",
         });
     }
+}));
+exports.getAllChannels = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const channels = yield channel_1.default.find();
+    res.status(200).json(channels);
 }));
 //# sourceMappingURL=channel.js.map

@@ -41,3 +41,10 @@ export const newChannel = asyncHandler(
         }
     }
 );
+
+export const getAllChannels = asyncHandler(
+    async (req: Request, res: Response) => {
+        const channels = await Channel.find();
+        res.status(200).json(channels);
+    }
+);

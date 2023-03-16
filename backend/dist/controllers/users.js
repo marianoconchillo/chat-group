@@ -121,15 +121,22 @@ exports.loginUserFirebase = (0, express_async_handler_1.default)((req, res) => _
 // @route   GET /api/users/me
 // @access  Private
 exports.getMe = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, name, bio, phone, pictureUrl } = req.body;
-    res.status(200).json({
-        email: email || "",
-        password: password || "",
-        name: name || "",
-        bio: bio || "",
-        phone: phone || "",
-        pictureUrl: pictureUrl || "",
-    });
+    if (req.user) {
+        const { email, password, name, bio, phone, pictureUrl } = req.user;
+        res.status(200).json({
+            email: email || "",
+            password: password || "",
+            name: name || "",
+            bio: bio || "",
+            phone: phone || "",
+            pictureUrl: pictureUrl || "",
+        });
+    }
+    else {
+        res.status(400).json({
+            msg: "Invalid user data",
+        });
+    }
 }));
 // @desc    Update user data
 // @route   PATCH /api/users/:id

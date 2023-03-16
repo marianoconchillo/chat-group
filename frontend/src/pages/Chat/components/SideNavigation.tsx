@@ -3,10 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown, faUser } from "@fortawesome/free-solid-svg-icons";
 import { ChannelInfo } from "./ChannelInfo";
 import { useState } from "react";
-import { MyChannels } from "./MyChannels";
+import { Channels } from "./Channels";
 import { Dropdown } from "./Dropdown";
+import { useAppSelector } from "../../../hooks/useAppSelector";
 
 export const SideNavigation = () => {
+    const { user } = useAppSelector((state) => state.user);
+
     const [showChannelInfo, setShowChannelInfo] = useState<boolean>(true);
     const [showDropwdown, setShowDropwdown] = useState<boolean>(false);
 
@@ -23,7 +26,7 @@ export const SideNavigation = () => {
                 {showChannelInfo ? (
                     <ChannelInfo setShowChannelInfo={setShowChannelInfo} />
                 ) : (
-                    <MyChannels />
+                    <Channels />
                 )}
                 <div
                     onClick={(
@@ -31,12 +34,23 @@ export const SideNavigation = () => {
                     ) => e.stopPropagation()}
                 >
                     <div className="h-16 bg-backgroundVeryDark px-5 shadow-md flex items-center justify-between font-bold absolute bottom-0 w-full">
-                        <div className="space-x-5">
-                            <FontAwesomeIcon icon={faUser} />
+                        <div className="flex space-x-5">
+                            {user && user.pictureUrl ? (
+                                <img
+                                    src={user.pictureUrl}
+                                    className="h-10 w-10 rounded-lg"
+                                />
+                            ) : (
+                                <FontAwesomeIcon icon={faUser} />
+                            )}
                             <button
                                 onClick={() => setShowDropwdown(!showDropwdown)}
                             >
-                                Mariano Conchillo
+                                {user
+                                    ? user.name !== ""
+                                        ? user.name
+                                        : "Anonymous"
+                                    : "Loading ..."}
                             </button>
                         </div>
                         <FontAwesomeIcon

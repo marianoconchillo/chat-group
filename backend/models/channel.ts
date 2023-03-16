@@ -11,7 +11,7 @@ export interface IChannel extends Document {
 
 const channelSchema = new Schema<IChannel>(
     {
-        name: { type: String, required: true, unique: true },
+        name: { type: String, required: true, unique: true, uppercase: true },
         description: { type: String, required: true },
         users: [{ type: Schema.Types.ObjectId, ref: "User" }],
         messages: [messageSchema],
