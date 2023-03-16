@@ -8,10 +8,13 @@ import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { getMe } from "../../redux/features/user/userServices";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { Loading } from "../../components/Loading";
+import { getDefaultChannel } from "../../redux/features/channel/channelServices";
 
 export const Chat = () => {
     const dispatch = useAppDispatch();
-    const { isLoading, error } = useAppSelector((state) => state.user);
+    const { isLoading: loadingUser, error: errorUser } = useAppSelector(
+        (state) => state.user
+    );
 
     const [click, setClick] = useState<boolean>(false);
 
@@ -23,6 +26,7 @@ export const Chat = () => {
 
     useEffect(() => {
         dispatch(getMe());
+        dispatch(getDefaultChannel());
     }, []);
 
     useEffect(() => {
@@ -35,11 +39,13 @@ export const Chat = () => {
 
     return (
         <>
-            {isLoading ? (
+            {loadingUser ? (
                 <Loading />
-            ) : error ? (
+            ) : errorUser ? (
                 <div className="h-screen flex items-center justify-center">
-                    <h3 className="text-2xl font-bold text-red-600">{error}</h3>
+                    <h3 className="text-2xl font-bold text-red-600">
+                        {errorUser}
+                    </h3>
                 </div>
             ) : (
                 <div className="md:grid grid-cols-7">

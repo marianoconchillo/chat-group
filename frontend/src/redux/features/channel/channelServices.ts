@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../api/api";
-import { Channel } from "../../../interfaces/Channel";
+import { Channel, ChannelDetails } from "../../../interfaces/Channel";
 import { RootState } from "../../store";
 
 interface RequestBody {
@@ -54,6 +54,56 @@ export const getAllChannels = createAsyncThunk(
             };
 
             const { data } = await api.get<Channel[]>(`/channels`, config);
+
+            return data;
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+);
+
+export const getDefaultChannel = createAsyncThunk(
+    "channel/getDefaultChannel",
+    async (_, thunkAPI) => {
+        try {
+            const state = thunkAPI.getState() as RootState;
+            const token: string = state.auth.userAuth?.token || "";
+
+            const config: AuthConfig = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await api.get<ChannelDetails>(
+                `/channels/default`,
+                config
+            );
+
+            return data;
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+);
+
+export const getChannelDetails = createAsyncThunk(
+    "channel/getDetails",
+    async (idChannel: string, thunkAPI) => {
+        try {
+            const state = thunkAPI.getState() as RootState;
+            const token: string = state.auth.userAuth?.token || "";
+
+            const config: AuthConfig = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await api.get<ChannelDetails>(
+                `/channels/${idChannel}`,
+                config
+            );
 
             return data;
         } catch (error: any) {

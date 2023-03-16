@@ -9,5 +9,7 @@ const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware")
 const router = (0, express_1.Router)();
 router.route("/").post(authMiddleware_1.default, channel_1.newChannel);
 router.route("/").get(authMiddleware_1.default, channel_1.getAllChannels);
+router.route("/default").get(authMiddleware_1.default, channel_1.getDefaultChannel);
+router.route("/:id").get(authMiddleware_1.default, channel_1.getChannelById);
 exports.default = router;
 //# sourceMappingURL=channel.js.map

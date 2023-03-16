@@ -26,7 +26,7 @@ export const SideNavigation = () => {
                 {showChannelInfo ? (
                     <ChannelInfo setShowChannelInfo={setShowChannelInfo} />
                 ) : (
-                    <Channels />
+                    <Channels setShowChannelInfo={setShowChannelInfo} />
                 )}
                 <div
                     onClick={(

@@ -48,3 +48,39 @@ export const getAllChannels = asyncHandler(
         res.status(200).json(channels);
     }
 );
+
+export const getChannelById = asyncHandler(
+    async (req: Request, res: Response) => {
+        const channel = await Channel.findById(req.params.id)
+            .populate("users")
+            .populate("messages")
+            .exec();
+
+        if (channel) {
+            res.status(200).json(channel);
+        } else {
+            res.status(400).json({
+                msg: "Channel not found",
+            });
+        }
+    }
+);
+
+export const getDefaultChannel = asyncHandler(
+    async (req: Request, res: Response) => {
+        const DEFAULT_CHANNEL = "WELCOME";
+
+        const defaultChannel = await Channel.findOne({ name: DEFAULT_CHANNEL })
+            .populate("users")
+            .populate("messages")
+            .exec();
+
+        if (defaultChannel) {
+            res.status(200).json(defaultChannel);
+        } else {
+            res.status(400).json({
+                msg: "Channel not found",
+            });
+        }
+    }
+);

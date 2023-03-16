@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllChannels = exports.newChannel = void 0;
+exports.getDefaultChannel = exports.getChannelById = exports.getAllChannels = exports.newChannel = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const channel_1 = __importDefault(require("../models/channel"));
 exports.newChannel = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -51,5 +51,34 @@ exports.newChannel = (0, express_async_handler_1.default)((req, res) => __awaite
 exports.getAllChannels = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const channels = yield channel_1.default.find();
     res.status(200).json(channels);
+}));
+exports.getChannelById = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const channel = yield channel_1.default.findById(req.params.id)
+        .populate("users")
+        .populate("messages")
+        .exec();
+    if (channel) {
+        res.status(200).json(channel);
+    }
+    else {
+        res.status(400).json({
+            msg: "Channel not found",
+        });
+    }
+}));
+exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const DEFAULT_CHANNEL = "WELCOME";
+    const defaultChannel = yield channel_1.default.findOne({ name: DEFAULT_CHANNEL })
+        .populate("users")
+        .populate("messages")
+        .exec();
+    if (defaultChannel) {
+        res.status(200).json(defaultChannel);
+    }
+    else {
+        res.status(400).json({
+            msg: "Channel not found",
+        });
+    }
 }));
 //# sourceMappingURL=channel.js.map
