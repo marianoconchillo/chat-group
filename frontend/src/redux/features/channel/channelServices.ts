@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../../api/api";
+import { io, Socket } from "socket.io-client";
+import api, { ENDPOINT } from "../../../api/api";
 import { Channel, ChannelDetails } from "../../../interfaces/Channel";
 import { RootState } from "../../store";
 
@@ -13,6 +14,8 @@ interface AuthConfig {
         Authorization: string;
     };
 }
+
+const socket: Socket = io(ENDPOINT);
 
 export const newChannel = createAsyncThunk(
     "channel/new",
@@ -32,6 +35,8 @@ export const newChannel = createAsyncThunk(
                 requestBody,
                 config
             );
+
+            socket.emit("joinChannel", data.name);
 
             return data;
         } catch (error: any) {

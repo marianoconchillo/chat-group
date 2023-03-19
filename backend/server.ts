@@ -1,14 +1,18 @@
 import express, { Application } from "express";
 import fileUpload from "express-fileupload";
+import { Server as HttpServer, createServer } from "http";
 import path from "path";
 import fs from "fs";
 import cors from "cors";
 import connectDB from "./db/config";
 import userRoutes from "./routes/user";
 import channelRoutes from "./routes/channel";
+import errorHandler from "./middleware/errorMiddleware";
+import socketConnection from "./socket/socket";
 
 class Server {
     private app: Application;
+    private server: HttpServer;
     private port: string;
     private apiPaths = {
         users: "/api/users",
@@ -18,10 +22,14 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || "5000";
+        this.server = createServer(this.app);
 
         this.middlewares();
         this.dbConnection();
         this.routes();
+
+        this.socketConnection();
+        this.app.use(errorHandler);
     }
 
     private routes() {
@@ -51,14 +59,22 @@ class Server {
         await connectDB();
     };
 
+    private socketConnection = () => {
+        socketConnection(this.server);
+    };
+
     listen() {
-        this.app.listen(this.port, () => {
+        this.server.listen(this.port, () => {
             console.log(`Server started on port ${this.port}`);
         });
     }
 
     getApp(): Application {
         return this.app;
+    }
+
+    getServer(): HttpServer {
+        return this.server;
     }
 }
 

@@ -17,18 +17,16 @@ export const registerUser = asyncHandler(
         const { email, password } = req.body;
 
         if (!email || !password) {
-            res.status(400).json({
-                msg: "Please add all fields",
-            });
+            res.status(400);
+            throw new Error("Please add all fields");
         }
 
         // Check if user exists
         const userExists = await User.findOne({ email });
 
         if (userExists) {
-            res.status(400).json({
-                msg: "User already exists",
-            });
+            res.status(400);
+            throw new Error("User already exists");
         }
 
         const hashedPassword: string = await hashPassword(password);
@@ -49,9 +47,8 @@ export const registerUser = asyncHandler(
                 token: generateToken(user._id),
             });
         } else {
-            res.status(400).json({
-                msg: "Invalid user data",
-            });
+            res.status(400);
+            throw new Error("Invalid user data");
         }
     }
 );
@@ -63,9 +60,8 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        res.status(400).json({
-            msg: "Please add all fields",
-        });
+        res.status(400);
+        throw new Error("Please add all fields");
     }
 
     const user = await User.findOne({ email });
@@ -76,9 +72,8 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
             token: generateToken(user._id),
         });
     } else {
-        res.status(400).json({
-            msg: "Invalid credentials",
-        });
+        res.status(400);
+        throw new Error("Invalid credentials");
     }
 });
 
@@ -114,9 +109,8 @@ export const loginUserFirebase = asyncHandler(
                     token: generateToken(newUser._id),
                 });
             } else {
-                res.status(400).json({
-                    msg: "Login error with Firebase",
-                });
+                res.status(400);
+                throw new Error("Login error with Firebase");
             }
         }
     }
@@ -138,9 +132,8 @@ export const getMe = asyncHandler(
                 pictureUrl: pictureUrl || "",
             });
         } else {
-            res.status(400).json({
-                msg: "Invalid user data",
-            });
+            res.status(400);
+            throw new Error("Invalid user data");
         }
     }
 );
@@ -153,7 +146,8 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
     const { name, bio, phone, password } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        res.status(400).json({ msg: "Invalid user ID" });
+        res.status(400);
+        throw new Error("Invalid user ID");
     }
 
     let user: IUser | null = await User.findById(id);
@@ -174,9 +168,8 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
 
                 user.pictureUrl = result.secure_url;
             } catch (error) {
-                res.status(400).json({
-                    msg: "Error uploading the image",
-                });
+                res.status(400);
+                throw new Error("Error uploading the image");
             }
         }
 
@@ -199,9 +192,8 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
             token: generateToken(updatedUser._id),
         });
     } else {
-        res.status(404).json({
-            msg: "User not found",
-        });
+        res.status(404);
+        throw new Error("User not found");
     }
 });
 

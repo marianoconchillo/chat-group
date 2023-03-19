@@ -3,6 +3,7 @@ import { faAngleLeft, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useAppSelector } from "../../../hooks/useAppSelector";
 import { Loading } from "../../../components/Loading";
 import { User } from "../../../interfaces/User";
+import { AnimateComponent } from "../../../components/AnimateComponent";
 
 interface Props {
     setShowChannelInfo: (value: boolean) => void;
@@ -31,40 +32,46 @@ export const ChannelInfo = ({ setShowChannelInfo }: Props) => {
 
                         <div className="px-5 mt-5 flex flex-col space-y-10 flex-1">
                             <div className="flex flex-col space-y-4">
-                                <p className="font-bold">
-                                    {selectedChannel.name}
-                                </p>
-                                <p className="text-sm">
-                                    {selectedChannel.description}
-                                </p>
+                                <AnimateComponent>
+                                    <p className="font-bold">
+                                        {selectedChannel.name}
+                                    </p>
+                                    <p className="text-sm">
+                                        {selectedChannel.description}
+                                    </p>
+                                </AnimateComponent>
                             </div>
 
-                            <div className="flex flex-col space-y-5">
-                                <p className="font-bold">MEMBERS</p>
-                                {selectedChannel.users.map((user: User) => (
-                                    <div
-                                        className="flex space-x-5"
-                                        key={user.email}
-                                    >
-                                        {user.pictureUrl ? (
-                                            <img
-                                                src={user.pictureUrl}
-                                                className="h-10 w-10 rounded-lg"
-                                            />
-                                        ) : (
-                                            <FontAwesomeIcon icon={faUser} />
-                                        )}
-                                        <button
-                                            className="font-semibold"
-                                            style={{ color: "#828282" }}
+                            <AnimateComponent>
+                                <div className="flex flex-col space-y-5">
+                                    <p className="font-bold">MEMBERS</p>
+                                    {selectedChannel.users.map((user: User) => (
+                                        <div
+                                            className="flex space-x-5"
+                                            key={user.email}
                                         >
-                                            {user.name !== ""
-                                                ? user.name
-                                                : "Anonymous"}
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
+                                            {user.pictureUrl ? (
+                                                <img
+                                                    src={user.pictureUrl}
+                                                    className="h-10 w-10 rounded-lg"
+                                                />
+                                            ) : (
+                                                <FontAwesomeIcon
+                                                    icon={faUser}
+                                                />
+                                            )}
+                                            <button
+                                                className="font-semibold"
+                                                style={{ color: "#828282" }}
+                                            >
+                                                {user.name !== ""
+                                                    ? user.name
+                                                    : "Anonymous"}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </AnimateComponent>
                         </div>
                     </>
                 )

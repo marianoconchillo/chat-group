@@ -12,23 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDefaultChannel = exports.getChannelById = exports.getAllChannels = exports.newChannel = void 0;
+exports.newMessage = exports.getDefaultChannel = exports.getChannelById = exports.getAllChannels = exports.newChannel = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const channel_1 = __importDefault(require("../models/channel"));
+const message_1 = __importDefault(require("../models/message"));
 exports.newChannel = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const id = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
     const { name, description } = req.body;
     if (!name || !description) {
-        res.status(400).json({
-            msg: "Please add all fields",
-        });
+        res.status(400);
+        throw new Error("Please add all fields");
     }
     const channelExists = yield channel_1.default.findOne({ name });
     if (channelExists) {
-        res.status(400).json({
-            msg: "Channel already exists",
-        });
+        res.status(400);
+        throw new Error("Channel already exists");
     }
     const channel = yield channel_1.default.create({
         name,
@@ -43,9 +42,8 @@ exports.newChannel = (0, express_async_handler_1.default)((req, res) => __awaite
         });
     }
     else {
-        res.status(400).json({
-            msg: "Invalid channel data",
-        });
+        res.status(400);
+        throw new Error("Invalid channel data");
     }
 }));
 exports.getAllChannels = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -61,9 +59,8 @@ exports.getChannelById = (0, express_async_handler_1.default)((req, res) => __aw
         res.status(200).json(channel);
     }
     else {
-        res.status(400).json({
-            msg: "Channel not found",
-        });
+        res.status(400);
+        throw new Error("Channel not found");
     }
 }));
 exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -76,9 +73,32 @@ exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => _
         res.status(200).json(defaultChannel);
     }
     else {
-        res.status(400).json({
-            msg: "Channel not found",
-        });
+        res.status(400);
+        throw new Error("Channel not found");
+    }
+}));
+exports.newMessage = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, userId, text } = req.body;
+    if (!name || !userId || !text) {
+        res.status(400);
+        throw new Error("Please add all fields");
+    }
+    const channel = yield channel_1.default.findOne({ name });
+    if (!channel) {
+        res.status(400);
+        throw new Error("Channel not found");
+    }
+    const message = yield message_1.default.create({
+        user: userId,
+        text,
+    });
+    if (message) {
+        channel.messages.push(message);
+        yield channel.save();
+    }
+    else {
+        res.status(400);
+        throw new Error("Could not send message");
     }
 }));
 //# sourceMappingURL=channel.js.map

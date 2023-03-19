@@ -21,7 +21,7 @@ export const Navbar = ({ click, setClick }: Props) => {
                             onClick={() => setClick(!click)}
                         />
                         <p className="font-medium tracking-wide">
-                            {selectedChannel?.name}
+                            {selectedChannel.name}
                         </p>
                     </div>
                     {click && (

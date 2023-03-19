@@ -26,16 +26,14 @@ const cloudinary_1 = require("../utils/cloudinary");
 exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     if (!email || !password) {
-        res.status(400).json({
-            msg: "Please add all fields",
-        });
+        res.status(400);
+        throw new Error("Please add all fields");
     }
     // Check if user exists
     const userExists = yield user_1.default.findOne({ email });
     if (userExists) {
-        res.status(400).json({
-            msg: "User already exists",
-        });
+        res.status(400);
+        throw new Error("User already exists");
     }
     const hashedPassword = yield hashPassword(password);
     const user = yield user_1.default.create({
@@ -54,9 +52,8 @@ exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awai
         });
     }
     else {
-        res.status(400).json({
-            msg: "Invalid user data",
-        });
+        res.status(400);
+        throw new Error("Invalid user data");
     }
 }));
 // @desc    Authenticate a user
@@ -65,9 +62,8 @@ exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awai
 exports.loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     if (!email || !password) {
-        res.status(400).json({
-            msg: "Please add all fields",
-        });
+        res.status(400);
+        throw new Error("Please add all fields");
     }
     const user = yield user_1.default.findOne({ email });
     if (user && (yield bcrypt_1.default.compare(password, user.password))) {
@@ -77,9 +73,8 @@ exports.loginUser = (0, express_async_handler_1.default)((req, res) => __awaiter
         });
     }
     else {
-        res.status(400).json({
-            msg: "Invalid credentials",
-        });
+        res.status(400);
+        throw new Error("Invalid credentials");
     }
 }));
 // @desc    Authenticate a user with firebase service
@@ -111,9 +106,8 @@ exports.loginUserFirebase = (0, express_async_handler_1.default)((req, res) => _
             });
         }
         else {
-            res.status(400).json({
-                msg: "Login error with Firebase",
-            });
+            res.status(400);
+            throw new Error("Login error with Firebase");
         }
     }
 }));
@@ -133,9 +127,8 @@ exports.getMe = (0, express_async_handler_1.default)((req, res) => __awaiter(voi
         });
     }
     else {
-        res.status(400).json({
-            msg: "Invalid user data",
-        });
+        res.status(400);
+        throw new Error("Invalid user data");
     }
 }));
 // @desc    Update user data
@@ -145,7 +138,8 @@ exports.updateUser = (0, express_async_handler_1.default)((req, res) => __awaite
     const { id } = req.params;
     const { name, bio, phone, password } = req.body;
     if (!mongoose_1.default.Types.ObjectId.isValid(id)) {
-        res.status(400).json({ msg: "Invalid user ID" });
+        res.status(400);
+        throw new Error("Invalid user ID");
     }
     let user = yield user_1.default.findById(id);
     if (user) {
@@ -160,9 +154,8 @@ exports.updateUser = (0, express_async_handler_1.default)((req, res) => __awaite
                 user.pictureUrl = result.secure_url;
             }
             catch (error) {
-                res.status(400).json({
-                    msg: "Error uploading the image",
-                });
+                res.status(400);
+                throw new Error("Error uploading the image");
             }
         }
         if (password !== "")
@@ -183,9 +176,8 @@ exports.updateUser = (0, express_async_handler_1.default)((req, res) => __awaite
         });
     }
     else {
-        res.status(404).json({
-            msg: "User not found",
-        });
+        res.status(404);
+        throw new Error("User not found");
     }
 }));
 // Hash Password
