@@ -60,7 +60,7 @@ export const Chat = () => {
                             <Navbar click={click} setClick={setClick} />
                         </div>
 
-                        <div className="flex-1">
+                        <div className="flex-1 overflow-y-auto scroll-smooth">
                             <ChatMessages />
                         </div>
 

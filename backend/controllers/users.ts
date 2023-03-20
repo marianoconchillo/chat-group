@@ -34,7 +34,7 @@ export const registerUser = asyncHandler(
         const user: IUser = await User.create({
             email: email || "",
             password: hashedPassword,
-            name: "",
+            name: "Anonymous",
             bio: "",
             phone: "",
             pictureUrl: "",

@@ -39,7 +39,7 @@ exports.registerUser = (0, express_async_handler_1.default)((req, res) => __awai
     const user = yield user_1.default.create({
         email: email || "",
         password: hashedPassword,
-        name: "",
+        name: "Anonymous",
         bio: "",
         phone: "",
         pictureUrl: "",

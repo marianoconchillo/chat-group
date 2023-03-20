@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { io, Socket } from "socket.io-client";
 import api, { ENDPOINT } from "../../../api/api";
-import { Channel, ChannelDetails } from "../../../interfaces/Channel";
+import { AuthConfig } from "../../../interfaces/AuthConfig";
+import { Channel, ChannelDetails, Message } from "../../../interfaces/Channel";
 import { RootState } from "../../store";
 
 interface RequestBody {
@@ -9,13 +9,11 @@ interface RequestBody {
     description: string;
 }
 
-interface AuthConfig {
-    headers: {
-        Authorization: string;
-    };
+interface NewMessage {
+    userId: string;
+    text: string;
+    channelId: string;
 }
-
-const socket: Socket = io(ENDPOINT);
 
 export const newChannel = createAsyncThunk(
     "channel/new",
@@ -35,8 +33,6 @@ export const newChannel = createAsyncThunk(
                 requestBody,
                 config
             );
-
-            socket.emit("joinChannel", data.name);
 
             return data;
         } catch (error: any) {
@@ -107,6 +103,32 @@ export const getChannelDetails = createAsyncThunk(
 
             const { data } = await api.get<ChannelDetails>(
                 `/channels/${idChannel}`,
+                config
+            );
+
+            return data;
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(error.response.data.msg);
+        }
+    }
+);
+
+export const newMessage = createAsyncThunk(
+    "channel/newMessage",
+    async (message: NewMessage, thunkAPI) => {
+        try {
+            const state = thunkAPI.getState() as RootState;
+            const token: string = state.auth.userAuth?.token || "";
+
+            const config: AuthConfig = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await api.post<Message>(
+                `/channels/${message.channelId}/messages`,
+                message,
                 config
             );
 

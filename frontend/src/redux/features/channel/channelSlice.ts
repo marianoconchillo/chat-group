@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Channel, ChannelDetails } from "../../../interfaces/Channel";
+import { Channel, ChannelDetails, Message } from "../../../interfaces/Channel";
 import {
     getAllChannels,
     getChannelDetails,
     getDefaultChannel,
     newChannel,
+    newMessage,
 } from "./channelServices";
 
 interface ChannelState {
@@ -67,6 +68,17 @@ export const channelSlice = createSlice({
             state.selectedChannel = action.payload as ChannelDetails;
         });
         builder.addCase(getChannelDetails.rejected, (state, action) => {
+            state.error = action.payload as string;
+            state.isLoading = false;
+        });
+        builder.addCase(newMessage.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(newMessage.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.selectedChannel?.messages.push(action.payload as Message);
+        });
+        builder.addCase(newMessage.rejected, (state, action) => {
             state.error = action.payload as string;
             state.isLoading = false;
         });

@@ -1,11 +1,9 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
-import moment from "moment";
 
 interface Message {
     user: string;
     message: string;
-    time: string;
 }
 
 const socketConnection = (server: HttpServer) => {
@@ -28,7 +26,6 @@ const socketConnection = (server: HttpServer) => {
                 const message: Message = {
                     user,
                     message: text,
-                    time: moment().format("h:mm a"),
                 };
                 io.to(channel).emit("message", message);
             }

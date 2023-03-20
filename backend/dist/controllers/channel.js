@@ -16,6 +16,9 @@ exports.newMessage = exports.getDefaultChannel = exports.getChannelById = export
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const channel_1 = __importDefault(require("../models/channel"));
 const message_1 = __importDefault(require("../models/message"));
+// @desc    Create new Channel
+// @route   POST /api/channels
+// @access  Private
 exports.newChannel = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const id = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
@@ -46,14 +49,25 @@ exports.newChannel = (0, express_async_handler_1.default)((req, res) => __awaite
         throw new Error("Invalid channel data");
     }
 }));
+// @desc    Get all Channels
+// @route   GET /api/channels
+// @access  Private
 exports.getAllChannels = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const channels = yield channel_1.default.find();
     res.status(200).json(channels);
 }));
+// @desc    Get Channel by ID
+// @route   GET /api/channels/:id
+// @access  Private
 exports.getChannelById = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const channel = yield channel_1.default.findById(req.params.id)
         .populate("users")
-        .populate("messages")
+        .populate({
+        path: "messages",
+        populate: {
+            path: "user",
+        },
+    })
         .exec();
     if (channel) {
         res.status(200).json(channel);
@@ -63,11 +77,19 @@ exports.getChannelById = (0, express_async_handler_1.default)((req, res) => __aw
         throw new Error("Channel not found");
     }
 }));
+// @desc    Get default Channel
+// @route   GET /api/channels/default
+// @access  Private
 exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const DEFAULT_CHANNEL = "WELCOME";
     const defaultChannel = yield channel_1.default.findOne({ name: DEFAULT_CHANNEL })
         .populate("users")
-        .populate("messages")
+        .populate({
+        path: "messages",
+        populate: {
+            path: "user",
+        },
+    })
         .exec();
     if (defaultChannel) {
         res.status(200).json(defaultChannel);
@@ -77,13 +99,17 @@ exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => _
         throw new Error("Channel not found");
     }
 }));
+// @desc    Create new Message
+// @route   POST /api/channels/:id/messages
+// @access  Private
 exports.newMessage = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, userId, text } = req.body;
-    if (!name || !userId || !text) {
+    const { id } = req.params;
+    const { userId, text } = req.body;
+    if (!userId || !text) {
         res.status(400);
         throw new Error("Please add all fields");
     }
-    const channel = yield channel_1.default.findOne({ name });
+    const channel = yield channel_1.default.findById(id);
     if (!channel) {
         res.status(400);
         throw new Error("Channel not found");
@@ -95,6 +121,8 @@ exports.newMessage = (0, express_async_handler_1.default)((req, res) => __awaite
     if (message) {
         channel.messages.push(message);
         yield channel.save();
+        const messageSaved = yield message_1.default.findById(message._id).populate("user");
+        res.status(201).json(messageSaved);
     }
     else {
         res.status(400);

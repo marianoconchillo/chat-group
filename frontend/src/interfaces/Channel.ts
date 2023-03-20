@@ -11,7 +11,13 @@ export interface ChannelDetails {
     name: string;
     description: string;
     users: User[];
-    messages: any[];
+    messages: Message[];
     createdAt: string;
-    updatedAt: string;
+}
+
+export interface Message {
+    _id: string;
+    text: string;
+    user: User;
+    createdAt: string;
 }

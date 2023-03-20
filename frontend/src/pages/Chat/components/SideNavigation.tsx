@@ -34,7 +34,7 @@ export const SideNavigation = () => {
                     ) => e.stopPropagation()}
                 >
                     <div className="h-16 bg-backgroundVeryDark px-5 shadow-md flex items-center justify-between font-bold absolute bottom-0 w-full">
-                        <div className="flex space-x-5">
+                        <div className="flex space-x-5 items-center">
                             {user && user.pictureUrl ? (
                                 <img
                                     src={user.pictureUrl}
@@ -46,11 +46,7 @@ export const SideNavigation = () => {
                             <button
                                 onClick={() => setShowDropwdown(!showDropwdown)}
                             >
-                                {user
-                                    ? user.name !== ""
-                                        ? user.name
-                                        : "Anonymous"
-                                    : "Loading ..."}
+                                {user && user.name}
                             </button>
                         </div>
                         <FontAwesomeIcon

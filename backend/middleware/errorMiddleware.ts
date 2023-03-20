@@ -10,7 +10,6 @@ const errorHandler: ErrorRequestHandler = (
 
     res.status(statusCode).json({
         msg: err.message,
-        stack: err.stack,
     });
 };
 

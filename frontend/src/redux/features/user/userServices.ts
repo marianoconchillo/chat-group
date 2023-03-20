@@ -1,13 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../api/api";
+import { AuthConfig } from "../../../interfaces/AuthConfig";
 import { User } from "../../../interfaces/User";
 import { RootState } from "../../store";
-
-interface AuthConfig {
-    headers: {
-        Authorization: string;
-    };
-}
 
 export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
     try {
