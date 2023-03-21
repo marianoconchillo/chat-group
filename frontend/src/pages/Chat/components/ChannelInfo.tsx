@@ -17,8 +17,6 @@ export const ChannelInfo = ({ setShowChannelInfo }: Props) => {
 
     useEffect(() => {}, [selectedChannel?.users]);
 
-    console.log(selectedChannel?.users);
-
     return (
         <div className="h-full flex flex-col justify-between">
             {!selectedChannel && isLoading ? (

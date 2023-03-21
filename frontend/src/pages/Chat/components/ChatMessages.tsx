@@ -21,7 +21,7 @@ export const ChatMessages = () => {
             {selectedChannel &&
                 selectedChannel.messages.map((message, index) => (
                     <div
-                        className="flex items-center justify-center space-x-5 mt-5"
+                        className="flex items-start justify-center space-x-5 mt-5"
                         id={
                             index === selectedChannel.messages.length - 1
                                 ? `last-child`
