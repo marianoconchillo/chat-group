@@ -1,8 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { io, Socket } from "socket.io-client";
 import api, { ENDPOINT } from "../../../api/api";
 import { AuthConfig } from "../../../interfaces/AuthConfig";
 import { Channel, ChannelDetails, Message } from "../../../interfaces/Channel";
 import { RootState } from "../../store";
+import { addNewMessage } from "./channelSlice";
 
 interface RequestBody {
     name: string;
@@ -14,6 +16,20 @@ interface NewMessage {
     text: string;
     channelId: string;
 }
+
+export interface SocketMessage {
+    idChannel: string;
+    _id: string;
+    text: string;
+    user: {
+        _id: string;
+        name: string;
+        pictureUrl: string;
+    };
+    createdAt: string;
+}
+
+const socket: Socket = io(ENDPOINT);
 
 export const newChannel = createAsyncThunk(
     "channel/new",
@@ -81,6 +97,17 @@ export const getDefaultChannel = createAsyncThunk(
                 config
             );
 
+            if (state.channel.selectedChannel) {
+                socket.emit("leave-room", state.channel.selectedChannel._id);
+            }
+
+            socket.emit("joinChannel", data._id);
+
+            // Message from server
+            socket.on("message", (message) => {
+                thunkAPI.dispatch(addNewMessage(message));
+            });
+
             return data;
         } catch (error: any) {
             return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -105,6 +132,17 @@ export const getChannelDetails = createAsyncThunk(
                 `/channels/${idChannel}`,
                 config
             );
+
+            if (state.channel.selectedChannel) {
+                socket.emit("leave-room", state.channel.selectedChannel._id);
+            }
+
+            socket.emit("joinChannel", data._id);
+
+            // Message from server
+            // socket.on("message", (message) => {
+            //     thunkAPI.dispatch(addNewMessage(message));
+            // });
 
             return data;
         } catch (error: any) {
@@ -131,6 +169,22 @@ export const newMessage = createAsyncThunk(
                 message,
                 config
             );
+
+            const { _id, text, user, createdAt } = data;
+
+            const socketMessage: SocketMessage = {
+                idChannel: message.channelId,
+                _id,
+                text,
+                user: {
+                    _id: user._id,
+                    name: user.name,
+                    pictureUrl: user.pictureUrl,
+                },
+                createdAt: createdAt,
+            };
+
+            socket.emit("chatMessage", socketMessage);
 
             return data;
         } catch (error: any) {

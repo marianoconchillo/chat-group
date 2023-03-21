@@ -12,9 +12,9 @@ export const SendMessage = () => {
 
     const [message, setMessage] = useState<string>("");
 
-    const handleClick = async () => {
+    const handleClick = () => {
         if (channel && user && message !== "") {
-            await dispatch(
+            dispatch(
                 newMessage({
                     userId: user._id,
                     text: message,
@@ -23,6 +23,13 @@ export const SendMessage = () => {
             );
 
             setMessage("");
+        }
+    };
+
+    const handleKeyDown = (event: any) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            handleClick();
         }
     };
 
@@ -35,6 +42,7 @@ export const SendMessage = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     rows={1}
+                    onKeyDown={handleKeyDown}
                 />
                 <FontAwesomeIcon
                     icon={faPaperPlane}

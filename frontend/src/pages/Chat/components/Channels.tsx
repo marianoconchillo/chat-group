@@ -18,9 +18,7 @@ interface Props {
 
 export const Channels = ({ setShowChannelInfo }: Props) => {
     const dispatch = useAppDispatch();
-    const { isLoading, channels, error } = useAppSelector(
-        (state) => state.channel
-    );
+    const { channels } = useAppSelector((state) => state.channel);
 
     const [showModal, setShowModal] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>("");
@@ -29,8 +27,8 @@ export const Channels = ({ setShowChannelInfo }: Props) => {
         dispatch(getAllChannels());
     }, []);
 
-    const handleClick = async (channelId: string) => {
-        await dispatch(getChannelDetails(channelId));
+    const handleClick = (channelId: string) => {
+        dispatch(getChannelDetails(channelId));
         setShowChannelInfo(true);
     };
 

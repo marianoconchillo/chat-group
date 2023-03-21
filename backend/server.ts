@@ -10,6 +10,20 @@ import channelRoutes from "./routes/channel";
 import errorHandler from "./middleware/errorMiddleware";
 import socketConnection from "./socket/socket";
 
+interface Message {
+    idChannel: string;
+    _id: string;
+    text: string;
+    user: User;
+    createdAt: string;
+}
+
+interface User {
+    _id: string;
+    name: string;
+    pictureUrl: string;
+}
+
 class Server {
     private app: Application;
     private server: HttpServer;

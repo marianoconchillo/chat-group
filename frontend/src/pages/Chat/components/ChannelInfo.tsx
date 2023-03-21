@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useAppSelector } from "../../../hooks/useAppSelector";
@@ -13,6 +14,8 @@ export const ChannelInfo = ({ setShowChannelInfo }: Props) => {
     const { selectedChannel, isLoading } = useAppSelector(
         (state) => state.channel
     );
+
+    useEffect(() => {}, [selectedChannel?.users]);
 
     return (
         <div className="h-full flex flex-col justify-between">
@@ -56,9 +59,12 @@ export const ChannelInfo = ({ setShowChannelInfo }: Props) => {
                                                     className="h-10 w-10 rounded-lg"
                                                 />
                                             ) : (
-                                                <FontAwesomeIcon
-                                                    icon={faUser}
-                                                />
+                                                <div className="h-10 w-10 rounded-lg flex items-center justify-center">
+                                                    <FontAwesomeIcon
+                                                        icon={faUser}
+                                                        size="xl"
+                                                    />
+                                                </div>
                                             )}
                                             <button
                                                 className="font-semibold"

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Channel, ChannelDetails, Message } from "../../../interfaces/Channel";
 import {
     getAllChannels,
@@ -25,7 +25,11 @@ const initialState: ChannelState = {
 export const channelSlice = createSlice({
     name: "channel",
     initialState,
-    reducers: {},
+    reducers: {
+        addNewMessage: (state, action: PayloadAction<Message>) => {
+            state.selectedChannel?.messages.push(action.payload);
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(newChannel.pending, (state) => {
             state.isLoading = true;
@@ -38,6 +42,7 @@ export const channelSlice = createSlice({
             state.isLoading = false;
             state.error = action.payload as string;
         });
+
         builder.addCase(getAllChannels.pending, (state) => {
             state.isLoading = true;
         });
@@ -49,6 +54,7 @@ export const channelSlice = createSlice({
             state.error = action.payload as string;
             state.isLoading = false;
         });
+
         builder.addCase(getDefaultChannel.pending, (state) => {
             state.isLoading = true;
         });
@@ -60,6 +66,7 @@ export const channelSlice = createSlice({
             state.error = action.payload as string;
             state.isLoading = false;
         });
+
         builder.addCase(getChannelDetails.pending, (state) => {
             state.isLoading = true;
         });
@@ -71,12 +78,13 @@ export const channelSlice = createSlice({
             state.error = action.payload as string;
             state.isLoading = false;
         });
+
         builder.addCase(newMessage.pending, (state) => {
             state.isLoading = true;
         });
         builder.addCase(newMessage.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.selectedChannel?.messages.push(action.payload as Message);
+            state.selectedChannel?.messages.push(action.payload);
         });
         builder.addCase(newMessage.rejected, (state, action) => {
             state.error = action.payload as string;
@@ -84,3 +92,5 @@ export const channelSlice = createSlice({
         });
     },
 });
+
+export const { addNewMessage } = channelSlice.actions;

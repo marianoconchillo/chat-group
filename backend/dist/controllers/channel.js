@@ -60,7 +60,9 @@ exports.getAllChannels = (0, express_async_handler_1.default)((req, res) => __aw
 // @route   GET /api/channels/:id
 // @access  Private
 exports.getChannelById = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const channel = yield channel_1.default.findById(req.params.id)
+    var _b;
+    const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
+    let channel = yield channel_1.default.findById(req.params.id)
         .populate("users")
         .populate({
         path: "messages",
@@ -70,6 +72,12 @@ exports.getChannelById = (0, express_async_handler_1.default)((req, res) => __aw
     })
         .exec();
     if (channel) {
+        const alreadyMember = channel.users.find((user) => user._id.toString() === userId);
+        if (!alreadyMember) {
+            channel.users.push(userId);
+            yield channel.save();
+            channel = yield channel.populate("users");
+        }
         res.status(200).json(channel);
     }
     else {
@@ -81,7 +89,9 @@ exports.getChannelById = (0, express_async_handler_1.default)((req, res) => __aw
 // @route   GET /api/channels/default
 // @access  Private
 exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c;
     const DEFAULT_CHANNEL = "WELCOME";
+    const userId = (_c = req.user) === null || _c === void 0 ? void 0 : _c.id;
     const defaultChannel = yield channel_1.default.findOne({ name: DEFAULT_CHANNEL })
         .populate("users")
         .populate({
@@ -92,6 +102,11 @@ exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => _
     })
         .exec();
     if (defaultChannel) {
+        const alreadyMember = defaultChannel.users.find((user) => user._id.toString() === userId);
+        if (!alreadyMember) {
+            defaultChannel.users.push(userId);
+            yield defaultChannel.save();
+        }
         res.status(200).json(defaultChannel);
     }
     else {

@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
+import { Types } from "mongoose";
 import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import Channel, { IChannel } from "../models/channel";
 import Message, { IMessage } from "../models/message";
+import { IUser } from "../models/user";
 
 // @desc    Create new Channel
 // @route   POST /api/channels
@@ -57,9 +59,11 @@ export const getAllChannels = asyncHandler(
 // @route   GET /api/channels/:id
 // @access  Private
 export const getChannelById = asyncHandler(
-    async (req: Request, res: Response) => {
-        const channel = await Channel.findById(req.params.id)
-            .populate("users")
+    async (req: AuthenticatedRequest, res: Response) => {
+        const userId = req.user?.id;
+
+        let channel = await Channel.findById(req.params.id)
+            .populate<{ users: IUser[] }>("users")
             .populate({
                 path: "messages",
                 populate: {
@@ -69,6 +73,16 @@ export const getChannelById = asyncHandler(
             .exec();
 
         if (channel) {
+            const alreadyMember = channel.users.find(
+                (user) => user._id.toString() === userId
+            );
+
+            if (!alreadyMember) {
+                channel.users.push(userId);
+                await channel.save();
+                channel = await channel.populate("users");
+            }
+
             res.status(200).json(channel);
         } else {
             res.status(400);
@@ -81,11 +95,12 @@ export const getChannelById = asyncHandler(
 // @route   GET /api/channels/default
 // @access  Private
 export const getDefaultChannel = asyncHandler(
-    async (req: Request, res: Response) => {
+    async (req: AuthenticatedRequest, res: Response) => {
         const DEFAULT_CHANNEL = "WELCOME";
+        const userId = req.user?.id;
 
         const defaultChannel = await Channel.findOne({ name: DEFAULT_CHANNEL })
-            .populate("users")
+            .populate<{ users: IUser[] }>("users")
             .populate({
                 path: "messages",
                 populate: {
@@ -95,6 +110,15 @@ export const getDefaultChannel = asyncHandler(
             .exec();
 
         if (defaultChannel) {
+            const alreadyMember = defaultChannel.users.find(
+                (user) => user._id.toString() === userId
+            );
+
+            if (!alreadyMember) {
+                defaultChannel.users.push(userId);
+                await defaultChannel.save();
+            }
+
             res.status(200).json(defaultChannel);
         } else {
             res.status(400);

@@ -5,12 +5,13 @@ import moment from "moment";
 import { useEffect } from "react";
 
 export const ChatMessages = () => {
-    const { selectedChannel } = useAppSelector((state) => state.channel);
+    const selectedChannel = useAppSelector(
+        (state) => state.channel.selectedChannel
+    );
 
     useEffect(() => {
         const element = document.getElementById("last-child");
         if (element) {
-            console.log(element);
             element.scrollIntoView({ behavior: "smooth" });
         }
     }, [selectedChannel?.messages]);
