@@ -92,7 +92,7 @@ exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => _
     var _c;
     const DEFAULT_CHANNEL = "WELCOME";
     const userId = (_c = req.user) === null || _c === void 0 ? void 0 : _c.id;
-    const defaultChannel = yield channel_1.default.findOne({ name: DEFAULT_CHANNEL })
+    let defaultChannel = yield channel_1.default.findOne({ name: DEFAULT_CHANNEL })
         .populate("users")
         .populate({
         path: "messages",
@@ -106,6 +106,7 @@ exports.getDefaultChannel = (0, express_async_handler_1.default)((req, res) => _
         if (!alreadyMember) {
             defaultChannel.users.push(userId);
             yield defaultChannel.save();
+            defaultChannel = yield defaultChannel.populate("users");
         }
         res.status(200).json(defaultChannel);
     }

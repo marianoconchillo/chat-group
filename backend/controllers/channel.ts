@@ -99,7 +99,7 @@ export const getDefaultChannel = asyncHandler(
         const DEFAULT_CHANNEL = "WELCOME";
         const userId = req.user?.id;
 
-        const defaultChannel = await Channel.findOne({ name: DEFAULT_CHANNEL })
+        let defaultChannel = await Channel.findOne({ name: DEFAULT_CHANNEL })
             .populate<{ users: IUser[] }>("users")
             .populate({
                 path: "messages",
@@ -117,6 +117,7 @@ export const getDefaultChannel = asyncHandler(
             if (!alreadyMember) {
                 defaultChannel.users.push(userId);
                 await defaultChannel.save();
+                defaultChannel = await defaultChannel.populate("users");
             }
 
             res.status(200).json(defaultChannel);

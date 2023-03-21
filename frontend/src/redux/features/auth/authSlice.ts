@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserAuth } from "../../../interfaces/User";
-import { login, register } from "./authServices";
+import {
+    login,
+    loginWithGithub,
+    loginWithGoogle,
+    register,
+} from "./authServices";
 
 interface AuthState {
     userAuth: UserAuth | null;
@@ -41,6 +46,7 @@ export const authSlice = createSlice({
             state.isLoading = false;
             state.userAuth = null;
         });
+
         builder.addCase(login.pending, (state) => {
             state.isLoading = true;
         });
@@ -49,6 +55,32 @@ export const authSlice = createSlice({
             state.userAuth = action.payload as UserAuth;
         });
         builder.addCase(login.rejected, (state, action) => {
+            state.error = action.payload as string;
+            state.isLoading = false;
+            state.userAuth = null;
+        });
+
+        builder.addCase(loginWithGoogle.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(loginWithGoogle.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.userAuth = action.payload as UserAuth;
+        });
+        builder.addCase(loginWithGoogle.rejected, (state, action) => {
+            state.error = action.payload as string;
+            state.isLoading = false;
+            state.userAuth = null;
+        });
+
+        builder.addCase(loginWithGithub.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(loginWithGithub.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.userAuth = action.payload as UserAuth;
+        });
+        builder.addCase(loginWithGithub.rejected, (state, action) => {
             state.error = action.payload as string;
             state.isLoading = false;
             state.userAuth = null;
